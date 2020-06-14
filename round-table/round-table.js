@@ -1,67 +1,63 @@
-process.stdin.resume();
-process.stdin.setEncoding("utf-8");
-
+const readline = require("readline");
+const rl = readline.createInterface({ input: process.stdin });
 let inputs = [];
 
-process.stdin.on("data", function (data) {
-  let lines = data.split("\n");
-  lines.forEach((line) =>
-    line
-      .trim()
-      .split(" ")
-      .forEach((e) => inputs.push(e))
-  );
+rl.on("line", function (line) {
+  line
+    .trim()
+    .split(/[ ,]+/)
+    .forEach((e) => inputs.push(e));
 });
 
-process.stdin.on("end", function () {
+rl.on("close", function () {
   main();
 });
-
-function solve(query = [], arr = [], mapIndexes = {}) {
-  const x = +query[0];
-  const y = +query[1];
-
-  let min = Number.MAX_SAFE_INTEGER;
-
-  for (let i = 0; i < mapIndexes[x].length; i++) {
-    for (let j = 0; j < mapIndexes[y].length; j++) {
-      let start, end;
-      if (mapIndexes[x][i] < mapIndexes[y][j]) {
-        start = mapIndexes[x][i];
-        end = mapIndexes[y][j];
-      } else {
-        end = mapIndexes[x][i];
-        start = mapIndexes[y][j];
-      }
-
-      const distance1 = +Math.ceil((end - start - 1) / 2)
-        .toFixed(0)
-        .replace("-0", "0");
-      const distance2 = +Math.ceil((start + arr.length - end - 1) / 2)
-        .toFixed(0)
-        .replace("-0", "0");
-      const distance = distance1 < distance2 ? distance1 : distance2;
-      min = distance < min ? distance : min;
-    }
-  }
-
-  console.log(+min);
-
-  return;
-}
 
 function main() {
   let N = inputs.splice(0, 1);
   let Q = inputs.splice(0, 1);
-  const arr = inputs.slice(0, inputs.length - 2 * Q);
+  const arr = inputs.splice(0, N);
   let mapIndexes = {};
-  for (let i = 0; i < arr.length; i++) {
+  for (let i = 0; i < N; i++) {
     const e = +arr[i];
     if (!(e in mapIndexes)) mapIndexes[e] = [];
     if (!mapIndexes[e].includes(i)) mapIndexes[e].push(i);
   }
 
+  let min, x, y, start, searchRes, left, right;
+
   while (Q--) {
-    solve(inputs.splice(0, 2), arr, mapIndexes);
+    min = Number.MAX_SAFE_INTEGER;
+    x = inputs.splice(0, 1);
+    y = inputs.splice(0, 1);
+    extendedIndexes = mapIndexes[y]
+      .map((x) => x - N)
+      .concat(mapIndexes[y])
+      .concat(mapIndexes[y].map((x) => x + +N));
+    for (let i = 0; i < mapIndexes[x].length; i++) {
+      start = mapIndexes[x][i];
+
+      searchRes = customBinSearch(extendedIndexes, start);
+      left = searchRes[0];
+      right = searchRes[1];
+      distance1 = Math.ceil((Math.abs(left - start) - 1) / 2);
+      distance2 = Math.ceil((Math.abs(right - start) - 1) / 2);
+      min = Math.min(distance1, distance2, min);
+    }
+    console.log(min.toFixed(0).replace('-0', '0'));
   }
+}
+
+function customBinSearch(list, val) {
+  let low = 0;
+  let high = list.length - 1;
+  let mid = Math.floor((high + low) / 2);
+  while (low < high) {
+    if (list[mid] > val) high = mid;
+    else low = mid + 1;
+    mid = Math.floor((high + low) / 2);
+  }
+  return list[mid] > val
+    ? [list[mid - 1 >= 0 ? mid - 1 : 0], list[mid]]
+    : [list[mid], list[mid + 1 < list.length ? mid + 1 : list.length - 1]];
 }
