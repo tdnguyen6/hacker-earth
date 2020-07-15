@@ -1,3 +1,6 @@
 # compiled binary
 **/*.out
 **/*.exe
+
+# clion cmake bin dir
+**/cmake-build-**
