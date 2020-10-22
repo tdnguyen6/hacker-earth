@@ -27,13 +27,8 @@ using namespace std;
 #define EPS 1e-9
 #define PI 3.1415926535897932384626433832795
 #define MOD 1000000007
-
 #define read(type) readInt<type>()
 const double pi = acos(-1.0);
-typedef long long ll;
-typedef long double ld;
-typedef unsigned int uint;
-typedef unsigned long long ull;
 typedef pair<int, int> PII;
 typedef vector<int> VI;
 typedef vector<string> VS;
@@ -42,10 +37,10 @@ typedef vector<VI> VVI;
 typedef map<int, int> MPII;
 typedef set<int> SETI;
 typedef multiset<int> MSETI;
-typedef long int int32;
-typedef unsigned long int uint32;
-typedef long long int int64;
-typedef unsigned long long int uint64;
+typedef long long ll;
+typedef long double ld;
+typedef unsigned int uint;
+typedef unsigned long long ull;
 
 /****** Template of some basic operations *****/
 template <typename T, typename U>
@@ -55,7 +50,7 @@ inline void amin(T &x, U y)
         x = y;
 }
 template <typename T, typename U>
-inline void amax(T &x, U y)
+inline void amax_n(T &x, U y)
 {
     if (x < y)
         x = y;
@@ -168,8 +163,78 @@ void file()
 /**************************************/
 
 /******** User-defined Function *******/
+
 void solve()
 {
+    int size;
+    cin >> size;
+    MPII freq;
+    freq[1] = 0;
+    for (int i = 0; i < size; i++)
+    {
+        int temp;
+        cin >> temp;
+        if (freq.find(temp) == freq.end())
+        {
+            freq[temp] = 1;
+        }
+        else
+        {
+            freq[temp]++;
+        }
+    }
+
+    ll need = 0;
+    for (auto it = freq.rbegin(); next(it) != freq.rend(); it++)
+    {
+        auto next_it = next(it);
+        int diff_second = it->second - next_it->second;
+        int diff_first = it->first - next_it->first;
+        if (diff_second > 0)
+        {
+            need += diff_second;
+            next_it->second += diff_second;
+        }
+        if (diff_first > 1)
+        {
+            for (auto i = next_it->first + 1; i < it->first; i++)
+            {
+                freq[i] = it->second;
+                need += it->second;
+            }
+        }
+    }
+
+    if (need)
+    {
+        cout << need;
+        return;
+    }
+
+    auto it = freq.begin();
+    cout << it->second << endl;
+    while (it != freq.end())
+    {
+        cout << it->first << ' ';
+        it->second--;
+        if (next(it) != freq.end())
+        {
+            auto next_it = next(it);
+            if (it->second >= next_it->second)
+            {
+                cout << endl;
+                it = freq.begin();
+                continue;
+            }
+        }
+        else if (freq.begin()->second > 0)
+        {
+            cout << endl;
+            it = freq.begin();
+            continue;
+        }
+        it++;
+    }
 }
 
 /**************************************/
@@ -181,10 +246,5 @@ int main()
     fast();
     // file();
 
-    int n_test;
-    cin >> n_test;
-    while (n_test--)
-    {
-        solve();
-    }
+    solve();
 }
