@@ -40,6 +40,8 @@
         "xtree": "cpp",
         "chrono": "cpp",
         "complex": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "*.tcc": "cpp",
+        "unordered_map": "cpp"
     }
 }
