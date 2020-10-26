@@ -42,6 +42,7 @@
         "complex": "cpp",
         "random": "cpp",
         "*.tcc": "cpp",
-        "unordered_map": "cpp"
+        "unordered_map": "cpp",
+        "unordered_set": "cpp"
     }
 }
