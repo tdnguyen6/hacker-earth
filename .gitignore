@@ -1,9 +1,14 @@
-# compiled binary
+# Cmake build dir
+**/bin
+
+# executables
 **/*.out
 **/*.exe
+**/*.class
 
-# clion cmake bin dir
-**/cmake-build-**
+# cmake output
+**/cmake-build**
+
 
 **/node_modules
 **/.idea

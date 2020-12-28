@@ -1,0 +1,73 @@
+S = 10
+T = '13'
+K = 0-9
+O(S * T * K) ~ O(n^3)
+
+dp[i][j]
+i: first i el of S
+j: len of longest suffix of S which is a prefix of T
+
+S = 10
+T = '1234'
+K = 0-9
+
+--> i: first i el of S
+i = 0: 0
+i = 1: 10
+dp[1][1] = 1
+i = 2: 100
+dp[2][1] = 10
+dp[2][2] = 1
+i = 3: 1000
+dp[3][1] = 100
+dp[3][2] = 10
+dp[3][3] = 1
+i = 4: 10000 - 1 = 9999
+dp[4][1] = 1000
+dp[4][2] = 100
+dp[4][3] = 10
+dp[4][4] = 1
+i = 5: |_|_|_|_|_|
+99990 - dp[5][4] = 99980
+dp[5][4] = 1 * dp[4][3] = 1 * 1 * dp[3][2] = ... = dp[2][1]
+i = 6:
+999800 - dp[6][4]
+dp[6][4] = 1 * dp[5][3] = 1 * 1 * dp[4][2] = ... = 100
+i = 7:
+9996000
+i = 8:
+99960000 - dp[8][4] = 99950001
+dp[8][4] = 
+i = 9:
+999400000
+i = 10:
+9993000000
+
+Formula:
+    t = len(T)
+    k is available chars
+    R_n = R_{n - 1} * k - dp[n][t]
+        = R_{n - 2} * k ** 2  - dp[n - 1][t] - dp[n][t]
+
+    dp[n][t] = dp[n - k][t - k]
+    let t - k = 0 => k = t
+    then dp[n - t][0] = R_{n - t}
+
+    R_n = R_{n - 1} * k - R_{n - t}
+        = R_{n - 2} * k ** 2 - R_{n - t -1} - R_{n - t}
+        = R_{n - 3} * k ** 3 - R_{n - t - 2} - R_{n - t -1} - R_{n - t}
+        = R_{n - u} * k ** u - R_{n - t - (u - 1)} - R_{n - t - (u - 2)} - ... - R_{n - t}
+        = R_{n - u} * k ** u - (R_{n - t - (u - 1)} + R_{n - t - (u - 2)} + ... + R_{n - t})
+        = R_{n - u} * k ** u - sum R_{n - t - v} for v from u - 1 v to 0
+        = ...
+        = R_{t - 1} * k ** n - t + 1 - sum R_{n - t - v} for v from n - t + 1 - 1 to 0
+        = k ** t - 1 * k ** n - t + 1 - sum R_{n - t - v} for v from n - t to 0
+        = k ** n - sum R_{n - t - v} for v from n - t to 0
+        = k ** n - sum R_{i} for v from 0 to n - t
+    constraint: n - t - v >= 0 => n - t >= v and v_max = u - 1
+    then n - t >= u - 1 => n - u >= t - 1
+    when n - u = t - 1 then u = n - t + 1
+
+
+
+            
