@@ -28,7 +28,7 @@ typedef long double ld;
 typedef unsigned int uint;
 typedef unsigned long long ull;
 typedef pair<int, int> PII;
-typedef vector<int> VI;
+typedef vector<ll> VI;
 typedef vector<string> VS;
 typedef vector<PII> VII;
 typedef vector<VI> VVI;
@@ -40,17 +40,41 @@ typedef unsigned long int uint32;
 typedef long long int int64;
 typedef unsigned long long int uint64;
 
-int solve(int i) {
-    return i;
-}
+#define C 1000000009
 
-long long int powxy(long long int x, long long int y) {
-    const int M = 1000000009;
-    if (y == 0) return 1;
-    if (y%2 == 1) return (x*powxy(x, y-1))%M;
-    long long int t = powxy(x, y/2);
-    return (t*t)%M;
+void multiply(ll a[3][3], ll b[3][3]) 
+{ 
+    ll mul[3][3] = {0}; 
+    for (ll i = 0; i < 3; i++) 
+        for (ll j = 0; j < 3; j++) 
+            for (ll k = 0; k < 3; k++) 
+                {
+                    mul[i][j] += (a[i][k] * b[k][j]) % C; 
+                    if(mul[i][k] >= C) mul[i][k] -= C;
+                    if(mul[i][k] < 0) mul[i][k] += C;
+                }
+  
+    for (ll i=0; i<3; i++) 
+        for (ll j=0; j<3; j++)
+            a[i][j] = mul[i][j];
+} 
+
+ll M[3][3] = {
+    {0, 99, -10},
+    {1, 0, 0},
+    {0, 1, 0}};
+void matpowp(ll a[3][3], ll n) 
+{
+
+    if(n <= 1)
+    	return;
+    matpowp(a,n/2); 
+    multiply(a,a); 
+    if (n&1)
+        multiply(a,M);
 }
+    
+
 int main()
 {
     ios::sync_with_stdio(false);
@@ -60,18 +84,29 @@ int main()
     // auto b = freopen("a.out", "w", stdout);
     // if (!a || !b)
     //     cout << "uh oh" << endl;
+    string T = "13";
+    ll t = T.length();
+    // ll k = 10;
+    ll matC[3][3] = {{99}, {10}, {1}};
+    ll n_test;
+    cin >> n_test;
+    while (n_test--)
+    {
+        ll n;
+        cin >> n;
+        if (n >= C) n %= C;
+        if (n < 2 * t - 1)
+            cout << matC[t - n][0] << '\n';
+        else
+        {
+            ll matB[3][3] = {
+                {0, 99, -10},
+                {1, 0, 0},
+                {0, 1, 0}};
+            matpowp(matB, n - 2);
+            multiply(matB, matC);
 
-    // int n_test;
-    // cin >> n_test;
-    // while (n_test--)
-    // {
-    //     int tmp;
-    //     cin >> tmp;
-    //     cout << solve(tmp) << '\n';
-    // }
-    uint k = 10;
-    int x;
-    cin >> x;
-    uint a = 1;
-    cout << powxy(k, x) << endl;
+            cout << matB[0][0] << '\n';
+        }
+    }
 }

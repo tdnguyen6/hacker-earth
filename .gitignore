@@ -5,6 +5,7 @@
 **/*.out
 **/*.exe
 **/*.class
+**/main
 
 # cmake output
 **/cmake-build**

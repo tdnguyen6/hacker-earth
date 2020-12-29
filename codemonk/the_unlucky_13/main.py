@@ -31,37 +31,57 @@ def o(w='', end='\n'):
 #########################################################
 
 
-# M = 10 ** 32
-
-
-# def powxy(x, y):
-#     if y == 0:
-#         return 1
-#     if y % 2 == 1:
-#         return (x*powxy(x, y-1)) % M
-#     t = powxy(x, y/2)
-#     return (t*t) % M
-
-
 c = 1000000009
-t = '13'
-K = 10
-l_t = len(t)
-R = [0] * (l_t + 1)
-r = len(R)
 
-# O (S * T * K)
+def mul(matA, matB):
+    row = len(matA);
+    col = len(matB[0]);
+    mid = len(matB);
+    mul = [[0 for x in range(col)] 
+			for y in range(row)]
+    for i in range(row):
+        for j in range(col):
+            for k in range(mid):
+                mul[i][j] += (matA[i][k] * matB[k][j]) % c
+
+    return mul
+
+
+def matpowp(mat, p):
+    r = len(mat)
+    res = [[0 for x in range(r)] 
+			for y in range(r)]
+    for i in range(r):
+        res[i][i] = 1
+    while p > 0:
+        if p % 2 == 1:
+            res = mul(res, mat)
+        mat = mul(mat, mat)
+        p //= 2
+
+    return res
+
+
+T = '13'
+t = len(T)
+k = 10
+matC = [[99], [10], [1]]
+matB = [
+    [0, 99, -10],
+    [1, 0, 0],
+    [0, 1, 0]
+]
 
 for _ in range(ii()):
-    n = ii()
-    for j in range(1, l_t + 1):  # 1 -> l_t
-        R[j] = K ** j
-    R[-1] = R[-1] - 1
+    n = ii() % c
+    if n < 2*t - 1:
+        o(matC[t - n][0])
+    else:
+        # Construct matrix
+        # o(matB)
+        matBpow = matpowp(matB[:], n - 2)
+        # o(matBpow)
+        matA = mul(matBpow, matC[:])
+        o(matA[0][0] % c)
 
-    for _ in range(l_t + 1, n + 1): # l_t + 1 to n
-        tmp = (R[r - 1] * K) - R[r - l_t]
-        for u in range(l_t):  # 0 -> l_t - 1
-            R[u] = R[u + 1]
-        R[-1] = tmp % c
-
-    o(int(R[-1]))
+# This solution is O(l_t^3logn) ~ O(logn)

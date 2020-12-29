@@ -48,6 +48,54 @@ i = 9:
 i = 10:
 9993000000
 
+3rd try:
+1     R[n] = R[n - 1] * k - R[n - t]
+2          = R[n - 2] * k^2 - R[n - t - 1] * k - R[n - t]
+...        = R[n - 3] * k^3 - R[n - t - 2] * k^2 - R[n - t - 1] * k - R[n - t]
+t          = R[n - t] * k^t - R[n - t - (t - 1)] * k^(t - 1) ... - R[n - t] * k^0
+           = R[n - t] * (k^t - 1) - sum R[n - t - i]*k^i for i from 1 to t - 1
+           n - t - (t - 1) = n + 2t + 1
+Case t = 2
+     R[n] = 99R[n - 2] - 10R[n - 3]
+Case t = 4
+     R[n] = 9999R[n - 4] - 10R[n - 5] - 100R[n - 6] - 1000R[n - 7]
+
+Maxtrix exponentiation
+Case t = 2
+     R[n] = 0R[n - 1] + 99R[n - 2] - 10R[n - 3]
+     [First Matrix]  [Second matrix]     [Third Matrix]
+     | F(n)   |  =  | x11 x12 x13 |  *   | F(n-1) |
+     | F(n-1) |     | x21 x22 x23 |      | F(n-2) |
+     | F(n-2) |     | x31 x32 x33 |      | F(n-3) |
+
+     [First Matrix]  [Second matrix]     [Third Matrix]
+     | F(n)   |  =  |  0   99 -10 |  *   | F(n-1) |
+     | F(n-1) |     |  1   0   0  |      | F(n-2) |
+     | F(n-2) |     |  0   1   0  |      | F(n-3) |
+
+     Base case: R[0] to R[2]
+
+     First n after base case: n = 3 => 2nd matrix ^ 1
+     => n => 2nd matrix ^ n - 2
+     | F(n)   |  =  [|  0   99 -10 |] ^ (n - 2)  *   | F(n-1) |
+     | F(n-1) |     [|  1   0   0  |]                | F(n-2) |
+     | F(n-2) |     [|  0   1   0  |]                | F(n-3) |
+
+Case t = t
+     2nd Matrix size = n - 2t + 1 to n - 1
+     s = n - 1 - (n + 2t - 1) + 1 = 2t - 1
+     => s = 2t - 1
+     Base case: R[0] to R[s - 1]
+     First n after base case: n = s => 2nd matrix ^ 1
+     => n => 2nd matrix ^ n - (s - 1) = 2nd matrix ^ n - s + 1
+Case t = 4 => s = 7
+     Base case: R[0] to R[6]
+     First n after base case: n = 7 => 2nd matrix ^ 1
+     => n => 2nd matrix ^ n - 6
+Case t = 50 => s = 99
+     Base case: R[0] to R[98]
+     First n after base case: n = 99 => 2nd matrix ^ 1
+     => n => 2nd matrix ^ n - 98
 
 2nd try:
     dp[n][0] = dp[n - 1][0] * k - dp[n][t]
@@ -56,12 +104,29 @@ i = 10:
              = dp[n - 2][0] * k^2 - dp[n - 1 - t] * k - dp[n - t][0]
 
     R[n] = R[n - 1] * k - R[n - t]
-    
+         = R[n - 2] * k^2 - R[n - t - 1] * k - R[n - t]
+         = R[n - 3] * k^3 - R[n - t - 2] * k^2 - R[n - t - 1] * k - R[n - t]
+         = R[n - i] * k^i - sum R[n - t - j] * k^j for j from 0 to i - 1
+         = R[t - 1] * k^(v_max + 1) - sum R[u] * k^v for u from 0 to n - t, v from n - t to 0
+         = k^(t - 1) * k^(n - t + 1) - sum R[u] * k^v for u from 0 to n - t, v from n - t to 0
+
+    t = 2, k = 10
+    R[5] = R[1] * k^(v_max + 1) - (R[0] * k^3 + R[1] * k^2 + R[2] * k^1 + R[3] * k^0)
+         = 10 * 10000 - (1000 + 1000 + 990 + 980)
+
+
+
+
+
+    n >= t 
+    n - t - j >= 0
+    u = n - t - j => j = n - t - u
+    n - t >= i - 1
     t = 2
     --> len(R) = 3
-0    R[0] = 0
+0    R[0] = 1
 1    R[1] = 10
-2    R[2] = 99
+2    R[2] = R[1] * k - R[0] = 99
 3    tmp = R[2] * k - R[1] = 980
      R[0] = R[1] = 10
      R[1] = R[2] = 99
