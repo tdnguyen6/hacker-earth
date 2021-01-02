@@ -1,0 +1,34 @@
+ 3: 011 & x
++
+ 5: 101 & x
++
+ 7: 111 & x
++
+ 1: 001 & x
++
+ 4: 100 & x
+
+output:
+1 -> 1
+2 -> 2
+3 -> 1
+4 -> -1
+5 -> -1
+... -> -1
+
+OR all nums together = a
+=> just need to care of inputs <= number of set bits in a
+in the case above a = 111 - 3 set bits
+
+if input <= no. set bits of a
+    we now count the contribution the the total value of each bit
+        we base on each set bits of a:
+            1st bits: 2^0 * 4 = 4 (in 3, 5, 7, 1)
+            2nd bits: 2^1 * 2 = 4 (in 3 and 7)
+            3rd bits: 2^2 * 3 = 12 (in 4, 5, 7)
+
+    3rd bits contribute the most, 1st and 2nd bits contribute the same:
+    => if we have 1 bits, only 1 choice that is 3rd bit
+    => if we have 2 bits, 1 bit for 3rd bit, then we have 2 choice, the other bit can be
+        either 1st or 2nd bit.
+    => if we have 3 bits, only 1 choice, put in all 3 bits

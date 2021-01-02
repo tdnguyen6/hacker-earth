@@ -1,0 +1,7 @@
+(Ai and Aj) xor (Ai or Aj)
+=> (X.Y)^(X+Y) 
+=> (X.Y)(X+Y)’ + (X.Y)'(X+Y) 
+=> (X.Y)(X’.Y’) + (X’+Y’)(X+Y) 
+=> X.X’.Y.Y’ + X’.X + X’.Y + Y’.X + Y’.Y 
+=> 0 + 0 + X’.Y + Y’.X + 0 
+=> X^Y  
