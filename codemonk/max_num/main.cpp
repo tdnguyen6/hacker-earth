@@ -40,19 +40,23 @@ typedef unsigned long int uint32;
 typedef long long int int64;
 typedef unsigned long long int uint64;
 
-int binomialCoeff(int n, int k)
+long long binomialCoeff(int n, int k)
 {
-    int C[k + 1] = {0};
- 
+    long long C[k + 1];
+
+    memset(C, 0, sizeof(C));
+
     C[0] = 1; // nC0 is 1
- 
-    for (int i = 1; i <= n; i++) {
+
+    for (int i = 1; i <= n; i++)
+    {
         // Compute next row of pascal
         // triangle using the previous row
         for (int j = min(i, k); j > 0; j--)
             C[j] += C[j - 1];
     }
     return C[k];
+    return 0;
 }
 
 int main()
@@ -96,7 +100,8 @@ int main()
         if (l <= bit_set_count)
         {
             ans = 1;
-            for (auto i = contribution.rbegin(); i != contribution.rend(); ++i) {
+            for (auto i = contribution.rbegin(); i != contribution.rend(); ++i)
+            {
                 if (l > i->second)
                 {
                     l -= i->second;
@@ -106,7 +111,6 @@ int main()
                     ans *= binomialCoeff(i->second, l);
                     break;
                 }
-                
             }
         }
         cout << ans << '\n';

@@ -1,0 +1,25 @@
+- map distinct values to its freq
+
+Solution 1 (easier but slower ~1.4s)
+1. loop through freq map
+2. update ans if current freq - min freq > ans
+3. update min freq if min freq less than current freq
+
+Solution 2 (faster ~1.3s)
+- make an inverted map, map distict freqs to values
+    each entry in this inverted map: 
+        freq -> (min value with that f, max value with that f)
+- sum of freqs of all values (not distinct) = no. of values
+=> call nf no. of freqs (not distinct) => nf(nf - 1) /2 = no. of values
+=> we cannot do O(no. of values ^ 2) but we can do O(nf^2) ~ O(no. of values)
+* with distinct freqs nf is also much less
+
+=> call inverted map of distinct freqs to min, max value ifreq
+    loop every (i, j) entry with (i < j and j(max value) > i(min value))
+        tmp = j(freq) - i(freq)
+        ans += max(tmp, ans)
+
+* because map is auto sorted so when i < j (i(freq)< j(freq)) as freq is key of map
+* using j(max value) > i(min value) so we can guarantee the existence of the condition
+    in the worst case. If even the max of j is <= min of i then no other value can
+    satisfy the given condition

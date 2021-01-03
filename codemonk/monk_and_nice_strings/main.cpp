@@ -45,43 +45,16 @@ int main() {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    int n_test;
-    cin >> n_test;
-    while (n_test--) {
-        int N;
-        cin >> N;
-        int A[N], ans = -1, mfreq = N + 1;
-        MPII freq;
-        REP(i, N) {
-            cin >> A[i];
-            freq[A[i]]++;
+    int N, count = 0;
+    cin >> N;
+    string S[N];
+    REP(i, N) {
+        count = 0;
+        cin >> S[i];
+        REP(j, i) {
+            if (S[j] < S[i])
+                count++;
         }
-
-        for (auto [v, f] : freq) {
-            ans = max(ans, freq[v] - mfreq);
-            mfreq = min(mfreq, freq[v]);
-        }
-
-        // map<int, int[2]> ifreq;
-
-        // for (auto &[v, f] : freq) {
-        //     if (ifreq.find(f) == ifreq.end()) {
-        //         ifreq[f][0] = 1000001;
-        //         ifreq[f][1] = 0;
-        //     }
-        //     ifreq[f][0] = min(ifreq[f][0], v);
-        //     ifreq[f][1] = max(ifreq[f][1], v);
-        // }
-
-        // for (auto i = ifreq.begin(); i != prev(ifreq.end(), 1); i++) {
-        //     for (auto j = next(i, 1); j != ifreq.end(); j++) {
-        //         if (j->second[1] > i->second[0]) {
-        //             tmp = j->first - i->first;
-        //             ans = max(tmp, ans);
-        //         }
-        //     }
-        // }
-
-        cout << ans << '\n';
+        cout << count << '\n';
     }
 }
